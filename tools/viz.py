@@ -110,7 +110,7 @@ def show_pointclouds(points, colors, title="Default"):
             pointclouds[i].add_point(point, color)
 
         renderers[i].AddActor(pointclouds[i].vtkActor)
-        renderers[i].AddActor(vtk.vtkAxesActor())
+        #renderers[i].AddActor(vtk.vtkAxesActor())
         renderers[i].SetBackground(1.0, 1.0, 1.0)
         # renderers[i].SetViewport(0.0, viewports[i][0], 1.0, viewports[i][1])
         renderers[i].SetViewport(viewports[i][0], 0.0, viewports[i][1], 1.0)

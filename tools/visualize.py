@@ -19,11 +19,14 @@ class2color = np.array([[200, 90, 0], # brown
 
 
 def main(pc_path):
-    point_cloud = np.load(pc_path)
-    points = point_cloud[:, 0:3]
-    colors_rgb = point_cloud[:, 3:6]
-    colors_labels = class2color[point_cloud[:, 6].astype(int)]
-    viz.show_pointclouds([points, points], [colors_rgb, colors_labels])
+    point_cloud1 = np.load(pc_path)
+    point_cloud2 = np.load('/globalwork/schult/vkitti_npy/0001/00005.npy')
+
+    points = point_cloud1[:, 0:3]
+    colors_rgb = point_cloud1[:, 3:6]
+    colors_labels1 = class2color[point_cloud1[:, 6].astype(int)]
+    colors_labels2 = class2color[point_cloud2[:, 6].astype(int)]
+    viz.show_pointclouds([points, points, points], [colors_rgb, colors_labels1, colors_labels2])
 
 
 if __name__ == '__main__':
