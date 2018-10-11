@@ -1,14 +1,37 @@
 ## VKITTI 3D Semantic Segmentation Dataset
 
-![VKITTI3D](doc/teaser.png)
+![VKITTI3D](doc/vkitti_teaser.png)
 
-This is the outdoor dataset used to evaluate 3D semantic segmentation of point clouds in ([Engelmann et al. ICCV'W17](https://www.vision.rwth-aachen.de/page/3dsemseg)) **Exploring Spatial Context for 3D Semantic Segmentation of Point Clouds** paper.
+This is the outdoor dataset used to evaluate 3D semantic segmentation of point clouds
+in ([Engelmann et al. ICCV'W17](https://www.vision.rwth-aachen.de/page/3dsemseg)) **Exploring Spatial Context for 3D Semantic Segmentation of Point Clouds** paper.
 The dataset is directly derived from the [Virtual KITTI Dataset](http://www.europe.naverlabs.com/Research/Computer-Vision/Proxy-Virtual-Worlds) (v.1.3.1).
 
-All files are provided here for convenience only, you can generate the whole dataset yourself from the original Virtual KITTI Dataset.
+For the above paper, version 1 was used.
 
 ### Download
-[VKITTI3D Dataset v1.0](https://www.vision.rwth-aachen.de/media/resource_files/vkitti3d_dataset_v1.0.zip)
+All files can be generated with the provided scripts in this repository.
+However, for convenience only, we provide all files on our server for downloading.
+
+* [VKITTI3D Dataset v1](https://www.vision.rwth-aachen.de/media/resource_files/vkitti3d_dataset_v1.0.zip)
+* [VKITTI3D Dataset v2](https://www.vision.rwth-aachen.de/media/resource_files/vkitti3d_dataset_v2.0.zip): Stay tuned ...
+
+### Generating the dataset
+* Download and extract files from the [Virtual KITTI Website](http://www.europe.naverlabs.com/Research/Computer-Vision/Proxy-Virtual-Worlds):
+```
+./download_vkitti_data.sh path/to/root/directory
+```
+
+* Create numpy files from raw data files. (For additional information about the parameter please refer to the provided
+argparse manual)
+```
+python create_npy.py --root_path path/to/root/vkitti_raw --out_path path/to/root/vkitti_npy --sequence 0001 --v2
+```
+
+* Create set splits for the same evaluation protocol as in
+([Engelmann et al. ICCV'W17](https://www.vision.rwth-aachen.de/page/3dsemseg)):
+```
+python create_sets.py --root_path path/to/root/vkitti_npy --out_path path/to/root/vkitti_sets
+```
 
 ### Data Format
 All files are provided as numpy ```.npy``` files.
@@ -35,6 +58,7 @@ point_cloud = np.load('dataset/01/0001_00000.npy')  # shape: (401326, 7)
 | 10 | Truck            | [0, 128, 255]   | dark blue   |
 | 11 | Car              | [0, 200, 255]   | bright blue |
 | 12 | Van              | [255, 128, 0]   | orange      |
+| 13 | Don't care       | [0, 0, 0]       | black       |
 
 
 ### Citation
@@ -93,20 +117,17 @@ For each sub-sequence, we selected 15 scenes/frames at equidistant timesteps to 
 | 20 | 6 | 500 - 800: 500,521,542,564,585,607,628,650,671,692,714,735,757,778,800 |
 
 
-### Projection Error Fix
-![FIXED_PROJECTION](doc/fixed_projection.png)
-Fix of the projection error occuring in the original VKITTI numpy pointclouds introduced by 
+### Additional information about version 2
+Fix of the projection error occuring in the VKITTI numpy pointclouds of version 1 introduced by 
 the wrong depth of car windows. The problem with the original point clouds is that they are 
 created from RGBD images. Voxels behind car glass will get the car class label 
 and thus, decreasing the quality of the test and training set.
 
 We introduced a new semantic class (*don't care class*). Voxels wrongly labeled with the 
-car class will be assigned to this class. The above figure shows the difference between the 
+car class will be assigned to this class. 
+
+In order to further increase the quality of our ground truth, we projected all images into world space and interpolated
+points with don't care class labels if labeled points where close by to these points.
+
+The above figure shows the difference between the 
 original pointcloud and the fixed version (black color illustrates the don't care class).
-
-#### Generating a dataset with fixed projections from dataset version 1
-* Use ```download_mot_data.sh``` for downloading the multi object tracking data provided by [Naver Labs Europe](https://www.europe.naverlabs.com/NAVER-LABS-Europe)
-* Execute ```create_version_2.py``` with parameters specified by argparse to generate a dataset with fixed projections
-
-#### TODOs
-* add tool to generate pointclouds from original RGBD VKITTI images

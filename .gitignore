@@ -3,3 +3,6 @@ __pycache__/
 vkitti3d_dataset_original/
 vkitti3d_mot/
 vkitti3d_dataset_fixed_*/
+*.out
+*.sh
+!tools/download_raw_vkitti.sh
