@@ -1,4 +1,4 @@
-## Virutal KITTI 3D Dataset for Semantic Segmentation
+## Virtual KITTI 3D Dataset for Semantic Segmentation
 
 ![VKITTI3D](doc/vkitti_teaser.png)
 
